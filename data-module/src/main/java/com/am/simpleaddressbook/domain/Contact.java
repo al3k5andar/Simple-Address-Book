@@ -18,5 +18,6 @@ public class Contact extends BaseEntry
     private Details details;
     private Note note;
     private ContactType contactType;
+    private Group group;
 
 }

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+              integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+              crossorigin="anonymous"
+              th:href="@{/webjars/bootstrap/4.5.3/css/bootstrap.min.css}">
+
+        <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+                crossorigin="anonymous"
+                th:href="@{/webjars/bootstrap/4.5.3/js/bootstrap.min.js}"></script>
+        <title>Contact Form</title>
+    </head>
+    <body>
+        <div class="container-fluid" style="margin-top: 20px">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card border-0">
+                        <div class="card-header bg-secondary">
+                            <h1 class="card-title text-center text-light">New Contact</h1>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form th:object="${contact}" method="post">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="card border-0">
+                                <div class="card-header">
+                                    <h4 class="card-title">Elementary Information</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input type="file" class="form-control-lg" th:field="*{image}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="container">
+                                                <div class="form-group">
+                                                    <label for="firstName" class="paramLabel">First Name:</label>
+                                                    <input id="firstName" type="text" class="form-control" th:field="*{firstName}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="lastName" class="paramLabel">Last Name:</label>
+                                                    <input id="lastName" type="text" class="form-control" th:field="*{lastName}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="middleName" class="paramLabel">Middle Name:</label>
+                                                    <input id="middleName" type="text" class="form-control" th:field="*{middleName}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="container">
+                                                <div class="form-group">
+                                                    <label for="contactType" class="paramLabel">Contact Type:</label>
+                                                    <select class="form-control" id="contactType" th:field="${contact.contactType}">
+                                                        <option th:each="type: ${contactType}"
+                                                                th:text="${type}"
+                                                                th:value="${type.name()}">type</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card border-0">
+                                    <input type="hidden" th:field="${contact.details.id}">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Details</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 offset-md-2">
+                                                <div class="container">
+                                                    <div class="form-group">
+                                                        <label for="phone" class="paramLabel">Phone:</label>
+                                                        <input type="text" class="form-control" id="phone"
+                                                               th:field="${contact.details.phone}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="workPhone" class="paramLabel">Work Phone:</label>
+                                                        <input type="text" class="form-control" id="workPhone"
+                                                               th:field="${contact.details.workPhone}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email" class="paramLabel">Email:</label>
+                                                        <input type="text" class="form-control" id="email"
+                                                               th:field="${contact.details.email}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="container">
+                                                    <div class="form-group">
+                                                        <label for="birthday" class="paramLabel">Date of Birth:</label>
+                                                        <input type="date" class="form-control" id="birthday" placeholder="yyyy/MM/dd"
+                                                               th:field="${contact.details.birthday}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nickname" class="paramLabel">Nickname:</label>
+                                                        <input type="text" class="form-control" id="nickname"
+                                                               th:field="${contact.details.nickName}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card border-0">
+                                    <input type="hidden" th:field="${contact.details.address.id}">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Address</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 offset-md-2">
+                                                <div class="container">
+                                                    <div class="form-group">
+                                                        <label for="country" class="paramLabel">Country:</label>
+                                                        <input type="text" id="country" class="form-control"
+                                                               th:field="${contact.details.address.country}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="city" class="paramLabel">City:</label>
+                                                        <input type="text" id="city" class="form-control"
+                                                               th:field="${contact.details.address.city}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="container">
+                                                    <div class="form-group">
+                                                        <label for="street" class="paramLabel">Street:</label>
+                                                        <input type="text" id="street" class="form-control"
+                                                               th:field="${contact.details.address.street}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="houseNo" class="paramLabel">House Number:</label>
+                                                        <input type="text" id="houseNo" class="form-control"
+                                                               th:field="${contact.details.address.houseNo}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card border-0">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Note</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="note" class="paramLabel">Description:</label>
+                                                <textarea id="note" class="form-control" rows="3"
+                                                          th:field="${contact.note.description}"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 offset-md-10">
+                                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
