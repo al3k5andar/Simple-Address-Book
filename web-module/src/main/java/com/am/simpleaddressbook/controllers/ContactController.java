@@ -72,13 +72,35 @@ public class ContactController {
         contact.setId(contactId);
 
         Group savedGroup= groupService.findById(groupId);
-
-        Contact savedContact= contactService.findById(contactId);
-        savedGroup.getContacts().remove(savedContact);
-        savedGroup.getContacts().add(contact);
-
+        Contact updatedContact= savedGroup.getContacts().stream()
+                .filter(theContact -> theContact.getId().equals(contactId))
+                .findFirst().orElse(null);
+        if(updatedContact!= null){
+            updatedContact.setId(contactId);
+            updatedContact.setFirstName(contact.getFirstName());
+            updatedContact.setLastName(contact.getLastName());
+            updatedContact.setMiddleName(contact.getMiddleName());
+            updatedContact.setImage(contact.getImage());
+            updatedContact.setContactType(contact.getContactType());
+            updatedContact.setDetails(contact.getDetails());
+            updatedContact.setNote(contact.getNote());
+            updatedContact.setGroup(contact.getGroup());
+        }
+        contactService.save(updatedContact);
         groupService.save(savedGroup);
 
         return "redirect:/groups/"+ groupId + "/view";
+    }
+
+    @GetMapping("/{contactId}/delete")
+    public String deleteContact(@PathVariable Long contactId, @PathVariable Long groupId){
+        Contact contact= contactService.findById(contactId);
+        Group group= groupService.findById(groupId);
+
+        group.getContacts().remove(contact);
+        contactService.delete(contact);
+        groupService.save(group);
+
+        return "redirect:/groups/"+ groupId+ "/view";
     }
 }

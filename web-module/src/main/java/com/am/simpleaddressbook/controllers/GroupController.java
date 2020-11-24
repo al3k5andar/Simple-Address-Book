@@ -52,4 +52,11 @@ public class GroupController
 
         return "redirect:/groups/index";
     }
+
+    @GetMapping("/{groupId}/delete")
+    public String deleteGroup(@PathVariable Long groupId){
+        groupService.deleteById(groupId);
+
+        return "redirect:/groups/index";
+    }
 }

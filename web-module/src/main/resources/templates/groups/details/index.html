@@ -54,14 +54,14 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-hover">
+                                    <table class="table table-hover text-center">
                                         <thead class="table-secondary">
                                             <tr>
                                                 <th>ID</th>
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Details</th>
-                                                <th colspan="2">Action</th>
+                                                <th th:colspan="2">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -69,8 +69,10 @@
                                                 <td th:text="${contact.id}">id</td>
                                                 <td th:text="${contact.firstName}">first name</td>
                                                 <td th:text="${contact.lastName}">last name</td>
-                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}}">Details</a></td>
-                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/update'}">Update</a> </td>
+                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/details/view'}">Details</a></td>
+                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/update'}">Update</a></td>
+                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/delete'}"
+                                                       onclick="return confirm('Are you sure do you want to delete this contact?');">Delete</a></td>
                                             </tr>
                                         </tbody>
                                     </table>

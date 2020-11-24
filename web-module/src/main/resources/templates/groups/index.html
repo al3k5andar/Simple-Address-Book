@@ -33,22 +33,22 @@
                         </div>
                         <table class="table table-hover text-center">
                             <thead class="table-secondary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Members</th>
-                                <th colspan="2">Action</th>
-                            </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Members</th>
+                                    <th th:colspan="2">Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="group: ${groups}">
-                                <td th:text="${group.id}">id</td>
-                                <td><a href="#" class="text-info" th:href="@{'/groups/'+${group.id}+'/view'}" th:text="${group.name}">name</a></td>
-                                <td th:text="${group.getContacts().size()}">members</td>
-                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/update'}">Update</a></td>
-                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/delete'}"
-                                       onclick="if(confirm('Are you sure to want to delete this Group?')); return null;">Delete</a></td>
-                            </tr>
+                                <tr th:each="group: ${groups}">
+                                    <td th:text="${group.id}">id</td>
+                                    <td><a href="#" class="text-info" th:href="@{'/groups/'+${group.id}+'/view'}" th:text="${group.name}">name</a></td>
+                                    <td th:text="${group.getContacts().size()}">members</td>
+                                    <td><a href="#" th:href="@{'/groups/'+${group.id}+'/update'}">Update</a></td>
+                                    <td><a href="#" th:href="@{'/groups/'+${group.id}+'/delete'}"
+                                           onclick="return confirm('Are you sure you want to delete this Group?');" >Delete</a></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

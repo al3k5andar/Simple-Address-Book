@@ -125,4 +125,20 @@ class GroupControllerTest {
 //        Then
         Mockito.verify(groupService, Mockito.times(1)).save(Mockito.any());
     }
+
+    @Test
+    void deleteGroup() throws Exception {
+//        Given
+        Group group= new Group();
+        group.setId(1L);
+
+        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
+
+//        When
+        mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/delete"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/index"));
+//        Then
+        Mockito.verify(groupService,Mockito.times(1)).deleteById(Mockito.anyLong());
+    }
 }
