@@ -22,7 +22,10 @@
                 <div class="col-md-8 offset-md-2">
                     <div class="card border-0">
                         <div class="card-header bg-secondary">
-                            <h1 class="card-title text-center text-light">New Contact</h1>
+                            <!--Change text according to content-->
+                            <h1 class="card-title text-center text-light"
+                                th:with="text=${contact['new'] ? 'New Contact' : 'Update Contact'}"
+                                th:text="${text}">Some Text</h1>
                         </div>
                     </div>
                     <div class="card-body">

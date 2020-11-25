@@ -12,4 +12,8 @@ import lombok.Setter;
 public class BaseEntry
 {
     private Long id;
+
+    public boolean isNew(){
+        return id == null;
+    }
 }
