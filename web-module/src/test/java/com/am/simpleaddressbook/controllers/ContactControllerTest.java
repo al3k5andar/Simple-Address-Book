@@ -171,7 +171,7 @@ class ContactControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/1/view"));
 //        Then
         Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
-        Mockito.verify(contactService,Mockito.times(1)).findById(Mockito.anyLong());
+        Mockito.verify(contactService,Mockito.times(1)).save(Mockito.any());
         Mockito.verify(groupService,Mockito.times(1)).save(Mockito.any());
     }
 

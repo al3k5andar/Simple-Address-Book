@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-@Profile({"default","map"})
+@Profile({"default","MAP"})
 public class AddressServiceMapImpl extends  AbstractContactMap<Long, Address> implements AddressService
 {
     @Override

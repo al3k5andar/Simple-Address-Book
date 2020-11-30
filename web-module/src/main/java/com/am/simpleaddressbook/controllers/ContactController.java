@@ -84,7 +84,7 @@ public class ContactController {
             updatedContact.setContactType(contact.getContactType());
             updatedContact.setDetails(contact.getDetails());
             updatedContact.setNote(contact.getNote());
-            updatedContact.setGroup(contact.getGroup());
+            updatedContact.setGroups(contact.getGroups());
         }
         contactService.save(updatedContact);
         groupService.save(savedGroup);

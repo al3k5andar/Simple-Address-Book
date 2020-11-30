@@ -21,7 +21,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        groupList().forEach(groupService::save);
+        if(groupService.findAll().size()== 0)
+            groupList().forEach(groupService::save);
     }
 
     private List<Group> groupList(){

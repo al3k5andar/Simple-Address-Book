@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-@Profile({"default","map"})
+@Profile({"default","MAP"})
 public class NoteServiceMapImpl extends AbstractContactMap<Long, Note> implements NoteService {
     @Override
     public Note save(Note note) {

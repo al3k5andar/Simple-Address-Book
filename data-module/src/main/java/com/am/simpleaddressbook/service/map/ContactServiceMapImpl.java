@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-@Profile({"default","map"})
+@Profile({"default","MAP"})
 public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> implements ContactService {
 
     private final NoteService noteService;

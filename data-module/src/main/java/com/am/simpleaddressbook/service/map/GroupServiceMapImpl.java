@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-@Profile({"default","map"})
+@Profile({"default","MAP"})
 public class GroupServiceMapImpl extends AbstractContactMap<Long, Group> implements GroupService {
 
     private final ContactService contactService;
