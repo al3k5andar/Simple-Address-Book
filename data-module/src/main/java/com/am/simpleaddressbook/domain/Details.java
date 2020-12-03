@@ -31,7 +31,7 @@ public class Details extends BaseEntry
     @Column(name = "nickname")
     private String nickName;
 
-    @ManyToOne()
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "address_id")
     private Address address;
 }

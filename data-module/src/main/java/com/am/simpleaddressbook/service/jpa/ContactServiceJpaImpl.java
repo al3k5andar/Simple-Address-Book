@@ -1,10 +1,9 @@
 package com.am.simpleaddressbook.service.jpa;
 
-import com.am.simpleaddressbook.domain.Address;
 import com.am.simpleaddressbook.domain.Contact;
-import com.am.simpleaddressbook.domain.Details;
-import com.am.simpleaddressbook.domain.Note;
+import com.am.simpleaddressbook.domain.Group;
 import com.am.simpleaddressbook.repositories.ContactRepository;
+import com.am.simpleaddressbook.repositories.GroupRepository;
 import com.am.simpleaddressbook.service.ContactService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -18,9 +17,11 @@ import java.util.Set;
 @Slf4j
 public class ContactServiceJpaImpl implements ContactService {
     private final ContactRepository contactRepository;
+    private final GroupRepository groupRepository;
 
-    public ContactServiceJpaImpl(ContactRepository contactRepository) {
+    public ContactServiceJpaImpl(ContactRepository contactRepository, GroupRepository groupRepository) {
         this.contactRepository = contactRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Override
@@ -29,51 +30,7 @@ public class ContactServiceJpaImpl implements ContactService {
             log.debug("Contact object can't be null");
             return new Contact();
         }
-        else{
-            Optional<Contact> optionalContact= contactRepository.findById(contact.getId());
-            if(optionalContact.isPresent()){
-                Contact theContact= optionalContact.get();
-                if(theContact.getNote()!= null){
-                    Note note= theContact.getNote();
-                    note.setDescription(contact.getNote().getDescription());
-                }
-                else
-                    theContact.setNote(new Note());
-                if(theContact.getDetails()!= null){
-                    Details details= theContact.getDetails();
-                    if(details.getAddress()!= null){
-                        Address address= details.getAddress();
-                        address.setCountry(contact.getDetails().getAddress().getCountry());
-                        address.setCity(contact.getDetails().getAddress().getCity());
-                        address.setStreet(contact.getDetails().getAddress().getStreet());
-                        address.setHouseNo(contact.getDetails().getAddress().getHouseNo());
-                    }
-                    else
-                        details.setAddress(new Address());
-
-                    details.setId(contact.getDetails().getId());
-                    details.setBirthday(contact.getDetails().getBirthday());
-                    details.setNickName(contact.getDetails().getNickName());
-                    details.setPhone(contact.getDetails().getPhone());
-                    details.setWorkPhone(contact.getDetails().getWorkPhone());
-                    details.setEmail(contact.getDetails().getEmail());
-                }
-                else
-                    theContact.setDetails(new Details());
-
-                if (theContact.getGroups()!= null && theContact.getGroups().size()>0){
-                    theContact.getGroups().retainAll(contact.getGroups());
-                }
-                theContact.setId(contact.getId());
-                theContact.setContactType(contact.getContactType());
-                theContact.setImage(contact.getImage());
-                theContact.setMiddleName(contact.getMiddleName());
-                theContact.setLastName(contact.getLastName());
-                theContact.setFirstName(contact.getFirstName());
-                contactRepository.save(theContact);
-            }
-            return contactRepository.save(contact);
-        }
+        return contactRepository.save(contact);
     }
 
     @Override
@@ -82,17 +39,45 @@ public class ContactServiceJpaImpl implements ContactService {
     }
 
     @Override
+    public Contact findByGroupIdAndContactId(Long groupId, Long contactId) {
+        Optional<Group> optionalGroup= groupRepository.findById(groupId);
+        if(!optionalGroup.isPresent()) {
+            log.info("We can not find Group with ID: " + groupId);
+            throw new RuntimeException("Group ID is NULL");
+        }
+        else{
+            Group group= optionalGroup.get();
+            Contact contact= group.getContacts()
+                    .stream()
+                    .filter(theContact -> theContact.getId().equals(contactId))
+                    .findFirst()
+                    .orElse(null);
+            if(contact== null){
+                log.info("We can not find Contact with ID: "+ contactId);
+                throw new RuntimeException("Contact ID is NULL");
+            }
+            else
+                return contact;
+        }
+    }
+
+    @Override
     public Contact findById(Long aLong) {
-        return null;
+        Optional<Contact> optionalContact= contactRepository.findById(aLong);
+        if(!optionalContact.isPresent()){
+            log.info("We can not find Contact with ID: "+ aLong);
+            throw new RuntimeException("Contact with ID: "+ aLong+ " do not exists");
+        }
+        return optionalContact.get();
     }
 
     @Override
     public void delete(Contact contact) {
-
+        contactRepository.delete(contact);
     }
 
     @Override
     public void deleteById(Long aLong) {
-
+        contactRepository.deleteById(aLong);
     }
 }

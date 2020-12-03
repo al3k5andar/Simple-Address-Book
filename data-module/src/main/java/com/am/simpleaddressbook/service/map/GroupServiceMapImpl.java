@@ -26,6 +26,8 @@ public class GroupServiceMapImpl extends AbstractContactMap<Long, Group> impleme
                 if(contact.getId()== null){
                     Contact persistedContact= contactService.save(contact);
                     contact.setId(persistedContact.getId());
+                    contact.getGroups().add(group);
+
                 }
             });
         return super.save(group);

@@ -2,10 +2,12 @@ package com.am.simpleaddressbook.service.map;
 
 import com.am.simpleaddressbook.domain.Contact;
 import com.am.simpleaddressbook.domain.Details;
+import com.am.simpleaddressbook.domain.Group;
 import com.am.simpleaddressbook.domain.Note;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.DetailsService;
 import com.am.simpleaddressbook.service.NoteService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.Set;
 
 @Service
 @Profile({"default","MAP"})
+@Slf4j
 public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> implements ContactService {
 
     private final NoteService noteService;
@@ -36,6 +39,25 @@ public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> imp
                 contact.getNote().setId(persistedNote.getId());
             }
         return super.save(contact);
+    }
+
+    @Override
+    public Contact findByGroupIdAndContactId(Long groupId, Long contactId) {
+        Contact contact= super.findById(contactId);
+        if(contact== null){
+            log.info("We can not find Contact with ID: "+ contactId);
+            throw new RuntimeException("Contact with ID: "+ contactId + " do not exists");
+        }
+        else {
+            Group group= contact.getGroups()
+                    .stream()
+                    .filter(theGroup -> theGroup.getId().equals(groupId))
+                    .findFirst().orElse(null);
+            if(group!= null)
+                return contact;
+            else
+                throw new RuntimeException("This Contact is not in Group");
+        }
     }
 
     @Override

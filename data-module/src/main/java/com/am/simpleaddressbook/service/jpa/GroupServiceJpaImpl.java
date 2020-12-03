@@ -6,11 +6,13 @@ import com.am.simpleaddressbook.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-@Profile("JSP")
+@Profile("JPA")
 @Service
 @Slf4j
 public class GroupServiceJpaImpl implements GroupService {
@@ -22,7 +24,13 @@ public class GroupServiceJpaImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public Group save(Group group) {
+        log.info("Inside Transaction !!!!");
+        if(group== null){
+            log.info("Given Group is NULL");
+            throw new RuntimeException("Group is NULL");
+        }
         return groupRepository.save(group);
     }
 
@@ -35,16 +43,19 @@ public class GroupServiceJpaImpl implements GroupService {
 
     @Override
     public Group findById(Long aLong) {
-        return null;
+        Optional<Group> optionalGroup= groupRepository.findById(aLong);
+        if(!optionalGroup.isPresent())
+            throw new RuntimeException("Group ID can not be null!!!");
+        return  optionalGroup.get();
     }
 
     @Override
     public void delete(Group group) {
-
+        groupRepository.delete(group);
     }
 
     @Override
     public void deleteById(Long aLong) {
-
+        groupRepository.deleteById(aLong);
     }
 }

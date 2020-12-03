@@ -138,7 +138,7 @@ class ContactControllerTest {
         Contact contact= new Contact();
         contact.setId(1L);
 
-        Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
+        Mockito.when(contactService.findByGroupIdAndContactId(Mockito.anyLong(),Mockito.anyLong())).thenReturn(contact);
 
 //        When
         mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/contacts/1/update"))
@@ -171,7 +171,7 @@ class ContactControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/1/view"));
 //        Then
         Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
-        Mockito.verify(contactService,Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(contactService,Mockito.times(1)).findById(Mockito.any());
         Mockito.verify(groupService,Mockito.times(1)).save(Mockito.any());
     }
 

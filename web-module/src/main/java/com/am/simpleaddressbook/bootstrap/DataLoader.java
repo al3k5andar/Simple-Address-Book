@@ -5,6 +5,7 @@ import com.am.simpleaddressbook.service.GroupService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if(groupService.findAll().size()== 0)
             groupList().forEach(groupService::save);
@@ -97,6 +99,32 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
         groups.add(family);
 
+//        Group group1= new Group();
+//        group1.setName("First");
+//        group1.setDescription("First group");
+//
+//        Contact contact1= new Contact();
+//        contact1.setFirstName("Patric");
+//        contact1.setLastName("Simon");
+//        Details contactDetails= new Details();
+//        contactDetails.setNickName("Example nickname");
+//
+//        Address address= new Address();
+//        address.setCountry("Serbia");
+//        contactDetails.setAddress(address);
+//        contact1.setDetails(contactDetails);
+//
+//        Note contactNote= new Note();
+//        contactNote.setDescription("Some contact description");
+//        contact1.addNote(contactNote);
+//        group1.getContacts().add(contact1);
+//
+//        Group group2= new Group();
+//        group2.setName("Second");
+//        group2.setDescription("Second group");
+//
+//        groups.add(group1);
+//        groups.add(group2);
 
         return groups;
     }

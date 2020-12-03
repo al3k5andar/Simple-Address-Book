@@ -13,6 +13,7 @@ class GroupServiceMapImplTest {
 
     GroupServiceMapImpl groupServiceMap;
 
+
     Group group;
 
     Long id= 1L;

@@ -23,9 +23,11 @@ public class Group extends BaseEntry
     @Column(name = "description")
     private String description;
 
-    @ManyToMany()
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @JoinTable(name = "group_contact",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "contact_id"))
     private Set<Contact> contacts= new HashSet<>();
+
 }

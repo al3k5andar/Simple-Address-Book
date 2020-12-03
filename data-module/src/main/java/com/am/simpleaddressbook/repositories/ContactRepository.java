@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ContactRepository extends CrudRepository<Contact, Long>
 {
     Optional<Contact> findByLastName(String lastName);
+
 }

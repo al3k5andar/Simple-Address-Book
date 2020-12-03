@@ -60,8 +60,9 @@ public class ContactController {
     }
 
     @GetMapping("/{contactId}/update")
-    public String showUpdateContactForm(@PathVariable Long contactId, Model model){
-        model.addAttribute("contact", contactService.findById(contactId));
+    public String showUpdateContactForm(@PathVariable Long groupId,
+                                        @PathVariable Long contactId, Model model){
+        model.addAttribute("contact", contactService.findByGroupIdAndContactId(groupId, contactId));
 
         return "groups/details/contacts/contact-form";
     }
@@ -69,25 +70,20 @@ public class ContactController {
     @PostMapping("/{contactId}/update")
     public String processUpdateContactForm(@PathVariable Long contactId,
                                            @PathVariable Long groupId, @ModelAttribute Contact contact){
-        contact.setId(contactId);
 
-        Group savedGroup= groupService.findById(groupId);
-        Contact updatedContact= savedGroup.getContacts().stream()
-                .filter(theContact -> theContact.getId().equals(contactId))
-                .findFirst().orElse(null);
-        if(updatedContact!= null){
-            updatedContact.setId(contactId);
-            updatedContact.setFirstName(contact.getFirstName());
-            updatedContact.setLastName(contact.getLastName());
-            updatedContact.setMiddleName(contact.getMiddleName());
-            updatedContact.setImage(contact.getImage());
-            updatedContact.setContactType(contact.getContactType());
-            updatedContact.setDetails(contact.getDetails());
-            updatedContact.setNote(contact.getNote());
-            updatedContact.setGroups(contact.getGroups());
+        Group group= groupService.findById(groupId);
+        Contact searchedContact= contactService.findById(contactId);
+        if(searchedContact!= null) {
+            searchedContact.setContactType(contact.getContactType());
+            searchedContact.setImage(contact.getImage());
+            searchedContact.setMiddleName(contact.getMiddleName());
+            searchedContact.setFirstName(contact.getFirstName());
+            searchedContact.setLastName(contact.getLastName());
+            searchedContact.setDetails(contact.getDetails());
+            searchedContact.setNote(contact.getNote());
+            group.getContacts().add(searchedContact);
         }
-        contactService.save(updatedContact);
-        groupService.save(savedGroup);
+        groupService.save(group);
 
         return "redirect:/groups/"+ groupId + "/view";
     }

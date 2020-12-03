@@ -30,21 +30,29 @@ public class Contact extends BaseEntry
     @Lob
     private Byte[] image;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id")
     private Details details;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "note_id")
     private Note note;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ContactType contactType;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @JoinTable(name = "group_contact",
             joinColumns = @JoinColumn(name = "contact_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     Set<Group> groups= new HashSet<>();
+
+    public void addNote(Note note){
+        if(note!= null){
+            this.setNote(note);
+            note.setContact(this);
+        }
+    }
 
 }
