@@ -3,10 +3,14 @@ package com.am.simpleaddressbook.controllers;
 import com.am.simpleaddressbook.domain.*;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
+import com.am.simpleaddressbook.service.ImageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/groups/{groupId}/contacts")
@@ -14,11 +18,13 @@ public class ContactController {
 
     private final GroupService groupService;
     private final ContactService contactService;
+    private final ImageService imageService;
 
     public ContactController(GroupService groupService,
-                             ContactService contactService) {
+                             ContactService contactService, ImageService imageService) {
         this.groupService = groupService;
         this.contactService = contactService;
+        this.imageService = imageService;
     }
 
     @ModelAttribute("group")
@@ -50,7 +56,10 @@ public class ContactController {
     }
 
     @PostMapping("/new")
-    public String processNewContactForm(@PathVariable Long groupId, @ModelAttribute Contact contact){
+    public String processNewContactForm(@PathVariable Long groupId, @ModelAttribute Contact contact,
+                                        @RequestParam("contactImage") MultipartFile multipartFile) throws IOException {
+
+        imageService.setImage(multipartFile.getBytes(),contact);
         Contact savedContact= contactService.save(contact);
         Group group= groupService.findById(groupId);
         group.getContacts().add(savedContact);
@@ -69,7 +78,8 @@ public class ContactController {
 
     @PostMapping("/{contactId}/update")
     public String processUpdateContactForm(@PathVariable Long contactId,
-                                           @PathVariable Long groupId, @ModelAttribute Contact contact){
+                                           @PathVariable Long groupId,
+                                           @ModelAttribute Contact contact, @RequestParam("contactImage") MultipartFile multipartFile) throws IOException {
 
         Group group= groupService.findById(groupId);
         Contact searchedContact= contactService.findById(contactId);
@@ -81,6 +91,9 @@ public class ContactController {
             searchedContact.setLastName(contact.getLastName());
             searchedContact.setDetails(contact.getDetails());
             searchedContact.setNote(contact.getNote());
+            if(multipartFile!= null){
+                imageService.setImage(multipartFile.getBytes(),searchedContact);
+            }
             group.getContacts().add(searchedContact);
         }
         groupService.save(group);

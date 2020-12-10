@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form th:object="${contact}" method="post">
+                        <form th:object="${contact}" method="post" enctype="multipart/form-data">
                             <input type="hidden" th:field="*{id}">
                             <div class="card border-0">
                                 <div class="card-header">
@@ -37,8 +37,13 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <input type="file" class="form-control-lg" th:field="*{image}">
+                                        <div class="col-md-4 d-flex align-items-center">
+                                            <div class="input-group mb-2">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="contactImage" name="contactImage">
+                                                    <label class="custom-file-label" for="contactImage">Choose file</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="container">

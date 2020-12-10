@@ -1,12 +1,10 @@
 package com.am.simpleaddressbook.service.map;
 
-import com.am.simpleaddressbook.domain.Contact;
-import com.am.simpleaddressbook.domain.ContactType;
-import com.am.simpleaddressbook.domain.Details;
-import com.am.simpleaddressbook.domain.Note;
+import com.am.simpleaddressbook.domain.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.Set;
 
@@ -109,5 +107,61 @@ class ContactServiceMapImplTest {
 
 //        Then
         Assertions.assertEquals(0, contactServiceMap.findAll().size());
+    }
+
+    @Test
+    void findByGroupIdAndContactId() {
+//        Given
+        Group group= new Group();
+        group.setId(id);
+        contact.setId(id);
+        contact.getGroups().add(group);
+        contactServiceMap.save(contact);
+
+
+//        When
+        Contact searchedContact= contactServiceMap.findByGroupIdAndContactId(1L,1L);
+
+//        Then
+        Assertions.assertNotNull(searchedContact);
+        Assertions.assertEquals(1L, searchedContact.getId());
+    }
+
+    @Test
+    void testFindByGroupIdAndContactIdWhenNonExistsContactId(){
+//        Given
+        contact.setId(2L);
+        contact.getGroups().add(new Group());
+        String expectedMessage= "Contact with ID: 1 do not exists";
+
+//        When
+        Exception exception= Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                contactServiceMap.findByGroupIdAndContactId(1L, 1L);
+            }
+        });
+
+//        Then
+        Assertions.assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    void testFindByGroupIdAndContactIdWhenNonExistsGroupId(){
+//        Given
+        contact.setId(id);
+        contactServiceMap.save(contact);
+        String expectedMessage= "This Contact is not in Group";
+
+//        When
+        Exception exception= Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                contactServiceMap.findByGroupIdAndContactId(2L, id);
+            }
+        });
+
+//        Then
+        Assertions.assertEquals(expectedMessage, exception.getMessage());
     }
 }

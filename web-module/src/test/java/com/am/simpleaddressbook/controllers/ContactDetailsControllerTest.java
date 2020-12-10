@@ -4,12 +4,16 @@ import com.am.simpleaddressbook.domain.Contact;
 import com.am.simpleaddressbook.domain.Group;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
+import com.am.simpleaddressbook.service.ImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -23,14 +27,20 @@ class ContactDetailsControllerTest {
     @Mock
     ContactService contactService;
 
+    @Mock
+    ImageService imageService;
+
     ContactDetailsController controller;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller= new ContactDetailsController(groupService, contactService);
+        controller= new ContactDetailsController(groupService, contactService, imageService);
 
         mockMvc= MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -91,5 +101,30 @@ class ContactDetailsControllerTest {
 
 //        Then
         Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
+    }
+
+    @Test
+    void renderImageFormDataBase() throws Exception {
+//        Given
+        Contact contact= new Contact();
+        byte[] someImage= "This is an image".getBytes();
+        Byte[] contactImage= new Byte[someImage.length];
+        int counter= 0;
+        for(byte b: someImage)
+            contactImage[counter++]= b;
+        contact.setImage(contactImage);
+        Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
+
+//        When
+        MockHttpServletResponse response= mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/groups/1/contacts/1/details/image"))
+                            .andExpect(MockMvcResultMatchers.status().isOk())
+                            .andReturn().getResponse();
+
+//        Then
+        byte[] responseArray= response.getContentAsByteArray();
+        Assertions.assertEquals(someImage.length, responseArray.length);
+
     }
 }

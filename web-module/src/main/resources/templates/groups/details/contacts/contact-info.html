@@ -34,7 +34,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <p>Image</p>
+                                            <img src="../../../../static/images/EmptyPicture.png" height="200" width="200"
+                                                 th:src="@{'/groups/'+${group.id}+ '/contacts/'+ ${contact.id}+ '/details/image'}">
                                         </div>
                                         <div class="col-md-8">
                                             <div class="accordion" id="accordionTag">

@@ -3,6 +3,7 @@ package com.am.simpleaddressbook.controllers;
 import com.am.simpleaddressbook.domain.*;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
+import com.am.simpleaddressbook.service.ImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,6 +24,9 @@ class ContactControllerTest {
 
     @Mock
     ContactService contactService;
+
+    @Mock
+    ImageService imageService;
 
     ContactController controller;
 
@@ -42,7 +47,7 @@ class ContactControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller= new ContactController(groupService, contactService);
+        controller= new ContactController(groupService, contactService, imageService);
 
         mockMvc= MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -118,8 +123,13 @@ class ContactControllerTest {
         Mockito.when(contactService.save(Mockito.any())).thenReturn(contact);
         Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
 
+        MockMultipartFile file= new MockMultipartFile("contactImage"
+                ,"something.txt"
+                ,"text/plain"
+                ,"Spring".getBytes());
+
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.post("/groups/1/contacts/new")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/groups/1/contacts/new").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("groupId","1L")
                     .param("contact","description"))
@@ -161,8 +171,14 @@ class ContactControllerTest {
         Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
         Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
+        MockMultipartFile file= new MockMultipartFile("contactImage"
+                ,"something.txt"
+                ,"text/plane"
+                ,"Spring".getBytes()
+        );
+
 //        Then
-        mockMvc.perform(MockMvcRequestBuilders.post("/groups/1/contacts/2/update")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/groups/1/contacts/2/update").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("contactId","2L")
                     .param("groupId","1L")

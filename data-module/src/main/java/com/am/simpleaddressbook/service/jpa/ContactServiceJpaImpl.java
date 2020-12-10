@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,14 +29,16 @@ public class ContactServiceJpaImpl implements ContactService {
     public Contact save(Contact contact) {
         if(contact== null){
             log.debug("Contact object can't be null");
-            return new Contact();
+            throw new RuntimeException("Contact object is NULL!!!");
         }
         return contactRepository.save(contact);
     }
 
     @Override
     public Set<Contact> findAll() {
-        return null;
+        Set<Contact> contacts= new HashSet<>();
+        contactRepository.findAll().forEach(contacts::add);
+        return contacts;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class ContactServiceJpaImpl implements ContactService {
         Optional<Group> optionalGroup= groupRepository.findById(groupId);
         if(!optionalGroup.isPresent()) {
             log.info("We can not find Group with ID: " + groupId);
-            throw new RuntimeException("Group ID is NULL");
+            throw new RuntimeException("Group is NULL!!!");
         }
         else{
             Group group= optionalGroup.get();
@@ -54,7 +57,7 @@ public class ContactServiceJpaImpl implements ContactService {
                     .orElse(null);
             if(contact== null){
                 log.info("We can not find Contact with ID: "+ contactId);
-                throw new RuntimeException("Contact ID is NULL");
+                throw new RuntimeException("Contact is NULL!!!");
             }
             else
                 return contact;
