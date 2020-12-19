@@ -23,6 +23,6 @@ class IndexControllerTest {
     void redirectMethod() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/index"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/index"));
     }
 }

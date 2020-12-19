@@ -1,6 +1,7 @@
 package com.am.simpleaddressbook.controllers;
 
 import com.am.simpleaddressbook.domain.Group;
+import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,9 @@ class GroupDetailsControllerTest {
     @Mock
     GroupService groupService;
 
+    @Mock
+    ContactService contactService;
+
     GroupDetailsController controller;
 
     MockMvc mockMvc;
@@ -25,7 +29,7 @@ class GroupDetailsControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller= new GroupDetailsController(groupService);
+        controller= new GroupDetailsController(groupService, contactService);
 
         mockMvc= MockMvcBuilders.standaloneSetup(controller).build();
     }

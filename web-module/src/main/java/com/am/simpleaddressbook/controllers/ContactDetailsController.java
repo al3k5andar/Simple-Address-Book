@@ -1,7 +1,6 @@
 package com.am.simpleaddressbook.controllers;
 
 import com.am.simpleaddressbook.domain.Contact;
-import com.am.simpleaddressbook.domain.Group;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
 import com.am.simpleaddressbook.service.ImageService;
@@ -22,7 +21,7 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 @Controller
-@RequestMapping("/groups/{groupId}/contacts/{contactId}/details")
+@RequestMapping("contacts/{contactId}/details")
 public class ContactDetailsController {
 
     private final GroupService groupService;
@@ -38,28 +37,18 @@ public class ContactDetailsController {
         this.imageService = imageService;
     }
 
-    @ModelAttribute("group")
-    public Group findGroupById(@PathVariable Long groupId){
-        return groupService.findById(groupId);
-    }
-
     @ModelAttribute("contact")
     public Contact findContactById(@PathVariable Long contactId){
         return contactService.findById(contactId);
     }
 
     @GetMapping("/view")
-    public ModelAndView showContactDetails(@PathVariable Long groupId,
-                                           @PathVariable Long contactId){
+    public ModelAndView showContactDetails(@PathVariable Long contactId){
         ModelAndView modelAndView= new ModelAndView();
-        Group group= groupService.findById(groupId);
-        Contact contact= group.getContacts().stream()
-                .filter(theContact -> theContact.getId().equals(contactId))
-                .findFirst().orElse(null);
+        Contact contact= contactService.findById(contactId);
 
-        modelAndView.addObject("group", group);
         modelAndView.addObject("contact", contact);
-        modelAndView.setViewName("groups/details/contacts/contact-info");
+        modelAndView.setViewName("contacts/contact-info");
 
         return modelAndView;
     }
@@ -71,7 +60,7 @@ public class ContactDetailsController {
         Contact contact= contactService.findById(contactId);
         byte[] imageBytes= null;
         InputStream is= null;
-        if(contact.getImage()!= null){
+        if(contact.getImage()!= null && contact.getImage().length>0){
            imageBytes = new byte[contact.getImage().length];
             int counter= 0;
             for(Byte b: contact.getImage())
@@ -79,7 +68,7 @@ public class ContactDetailsController {
             is= new ByteArrayInputStream(imageBytes);
         }
         else {
-            is= loader.getResource("classpath:static/images/EmptyPicture.png").getInputStream();
+            is= loader.getResource("classpath:static/images/defaultPic.png").getInputStream();
         }
         response.setContentType("image/jpeg");
         IOUtils.copy(is, response.getOutputStream());

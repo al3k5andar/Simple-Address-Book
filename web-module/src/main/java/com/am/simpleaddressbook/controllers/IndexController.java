@@ -10,6 +10,6 @@ public class IndexController {
 
     @GetMapping({"","/"})
     public String redirectMethod(){
-        return "redirect:/groups/index";
+        return "redirect:/contacts/index";
     }
 }

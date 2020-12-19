@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -58,6 +59,11 @@ public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> imp
             else
                 throw new RuntimeException("This Contact is not in Group");
         }
+    }
+
+    @Override
+    public List<Contact> findByLastNameLike(String lastName) {
+        return null;
     }
 
     @Override

@@ -19,6 +19,9 @@
         <title>Contact Info</title>
     </head>
     <body>
+    <div th:replace="fragments/navigationBar.html :: navigation">
+
+    </div>
         <div class="container-fluid" style="margin-top: 20px">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
@@ -34,8 +37,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <img src="../../../../static/images/EmptyPicture.png" height="200" width="200"
-                                                 th:src="@{'/groups/'+${group.id}+ '/contacts/'+ ${contact.id}+ '/details/image'}">
+                                            <img src="../../static/images/defaultPic.png" height="200" width="200"
+                                                 th:src="@{'/contacts/'+ ${contact.id}+ '/details/image'}">
                                         </div>
                                         <div class="col-md-8">
                                             <div class="accordion" id="accordionTag">

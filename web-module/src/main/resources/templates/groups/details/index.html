@@ -17,6 +17,9 @@
         <title>Details</title>
     </head>
     <body>
+        <div th:replace="fragments/navigationBar.html :: navigation">
+
+        </div>
         <div class="container-fluid" style="margin-top: 20px">
             <div class="row">
                 <div class="col-sm-8 offset-md-2">
@@ -50,7 +53,7 @@
                                 <div class="card-header bg-light">
                                     <div class="row">
                                         <h4 class="card-title col-md-10">Group contacts</h4>
-                                        <a href="#" class="btn btn-info" th:href="@{'/groups/'+${group.id}+'/contacts/new'}">Add Contact</a>
+                                        <a href="#" class="btn btn-info" th:href="@{'/groups/'+${group.id}+'/select'}">Add Contact</a>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -61,7 +64,7 @@
                                                 <th>First Name</th>
                                                 <th>Last Name</th>
                                                 <th>Details</th>
-                                                <th th:colspan="2">Action</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -69,10 +72,9 @@
                                                 <td th:text="${contact.id}">id</td>
                                                 <td th:text="${contact.firstName}">first name</td>
                                                 <td th:text="${contact.lastName}">last name</td>
-                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/details/view'}">Details</a></td>
-                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/update'}">Update</a></td>
-                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/delete'}"
-                                                       onclick="return confirm('Are you sure do you want to delete this contact?');">Delete</a></td>
+                                                <td><a href="#" th:href="@{'/contacts/'+${contact.id}+'/details/view'}">Details</a></td>
+                                                <td><a href="#" th:href="@{'/groups/'+${group.id}+'/contacts/'+${contact.id}+'/remove'}"
+                                                       onclick="return confirm('Do you want to remove this contact?');">Remove</a></td>
                                             </tr>
                                         </tbody>
                                     </table>

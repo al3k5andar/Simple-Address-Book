@@ -2,7 +2,6 @@ package com.am.simpleaddressbook.controllers;
 
 import com.am.simpleaddressbook.domain.*;
 import com.am.simpleaddressbook.service.ContactService;
-import com.am.simpleaddressbook.service.GroupService;
 import com.am.simpleaddressbook.service.ImageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +16,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-class ContactControllerTest {
+import java.util.HashSet;
+import java.util.Set;
 
-    @Mock
-    GroupService groupService;
+class ContactControllerTest {
 
     @Mock
     ContactService contactService;
@@ -47,25 +46,9 @@ class ContactControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller= new ContactController(groupService, contactService, imageService);
+        controller= new ContactController(contactService, imageService);
 
         mockMvc= MockMvcBuilders.standaloneSetup(controller).build();
-    }
-
-    @Test
-    void findGroupById() {
-//        Given
-        Group group= new Group();
-        group.setId(1L);
-
-        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
-
-//        When
-        Group theGroup= groupService.findById(1L);
-
-//        Then
-        Assertions.assertEquals(1L, theGroup.getId());
-        Mockito.verify(groupService, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     @Test
@@ -77,16 +60,36 @@ class ContactControllerTest {
     }
 
     @Test
+    void showAllContactsTest() throws Exception {
+//        Given
+        Contact contact1= new Contact();
+        Contact contact2= new Contact();
+        Set<Contact> contacts= new HashSet<>();
+        contacts.add(contact1);
+        contacts.add(contact2);
+
+        Mockito.when(contactService.findAll()).thenReturn(contacts);
+
+//        When
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/index"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("contacts"))
+                .andExpect(MockMvcResultMatchers.view().name("contacts/index"));
+//        Then
+        Mockito.verify(contactService, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
     void showNewContactForm() throws Exception {
 //        Given
         Contact contact= new Contact();
         contact.setId(1L);
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/contacts/new"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/new"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("contact"))
-                .andExpect(MockMvcResultMatchers.view().name("groups/details/contacts/contact-form"));
+                .andExpect(MockMvcResultMatchers.view().name("contacts/contact-form"));
 //        Then
         Mockito.verify(contactService,Mockito.never()).save(Mockito.any());
     }
@@ -117,11 +120,7 @@ class ContactControllerTest {
 
         contact.setNote(note);
 
-        Group group= new Group();
-        group.setId(id);
-
         Mockito.when(contactService.save(Mockito.any())).thenReturn(contact);
-        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
 
         MockMultipartFile file= new MockMultipartFile("contactImage"
                 ,"something.txt"
@@ -129,17 +128,14 @@ class ContactControllerTest {
                 ,"Spring".getBytes());
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/groups/1/contacts/new").file(file)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/contacts/new").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("groupId","1L")
                     .param("contact","description"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/1/view"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/1/details/view"));
 //        Then
         Mockito.verify(contactService,Mockito.times(1)).save(Mockito.any());
-        Mockito.verify(groupService,Mockito.times(1)).save(Mockito.any());
-        Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
-
     }
 
     @Test
@@ -148,13 +144,13 @@ class ContactControllerTest {
         Contact contact= new Contact();
         contact.setId(1L);
 
-        Mockito.when(contactService.findByGroupIdAndContactId(Mockito.anyLong(),Mockito.anyLong())).thenReturn(contact);
+        Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/contacts/1/update"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/1/update"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("contact"))
-                .andExpect(MockMvcResultMatchers.view().name("groups/details/contacts/contact-form"));
+                .andExpect(MockMvcResultMatchers.view().name("contacts/contact-form"));
 
 //        Then
         Mockito.verify(contactService, Mockito.never()).save(Mockito.any());
@@ -163,12 +159,9 @@ class ContactControllerTest {
     @Test
     void processUpdateContactForm() throws Exception {
 //        Given
-        Group group= new Group();
-        group.setId(1L);
         Contact contact= new Contact();
         contact.setId(2L);
 
-        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
         Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
         MockMultipartFile file= new MockMultipartFile("contactImage"
@@ -178,39 +171,33 @@ class ContactControllerTest {
         );
 
 //        Then
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/groups/1/contacts/2/update").file(file)
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/contacts/2/update").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("contactId","2L")
                     .param("groupId","1L")
                     .param("contact","description"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/1/view"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/2/details/view"));
 //        Then
-        Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
         Mockito.verify(contactService,Mockito.times(1)).findById(Mockito.any());
-        Mockito.verify(groupService,Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(contactService, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
     void deleteContact() throws Exception {
-//        Given
-        Group group= new Group();
-        group.setId(1L);
+//        Given;
         Contact contact= new Contact();
         contact.setId(1L);
 
-        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
         Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/contacts/1/delete"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/1/delete"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/groups/1/view"));
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/index"));
 
 //        Then
-        Mockito.verify(groupService, Mockito.times(2)).findById(Mockito.anyLong());
         Mockito.verify(contactService,Mockito.times(1)).delete(Mockito.any());
-        Mockito.verify(groupService,Mockito.times(1)).save(Mockito.any());
         Mockito.verify(contactService,Mockito.times(1)).findById(Mockito.anyLong());
     }
 }

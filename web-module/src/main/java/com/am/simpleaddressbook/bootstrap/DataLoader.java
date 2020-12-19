@@ -1,6 +1,7 @@
 package com.am.simpleaddressbook.bootstrap;
 
 import com.am.simpleaddressbook.domain.*;
+import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -15,25 +16,25 @@ import java.util.List;
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final GroupService groupService;
+    private final ContactService contactService;
 
-    public DataLoader(GroupService groupService) {
+    public DataLoader(GroupService groupService, ContactService contactService) {
         this.groupService = groupService;
+        this.contactService = contactService;
     }
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        if(contactService.findAll().size()== 0)
+            contactList().forEach(contactService::save);
+
         if(groupService.findAll().size()== 0)
-            groupList().forEach(groupService::save);
+            groupList().forEach(groupService :: save);
     }
 
-    private List<Group> groupList(){
-        List<Group> groups= new ArrayList<>();
-
-//        New Group
-        Group family= new Group();
-        family.setName("Family Group");
-        family.setDescription("Only family member contacts");
+    private List<Contact> contactList(){
+        List<Contact> contacts= new ArrayList<>();
 
 //        New Contact
         Contact sister= new Contact();
@@ -63,8 +64,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         sisterDetails.setAddress(sisterAddress);
 
         sister.setDetails(sisterDetails);
+        contacts.add(sister);
 
-        family.getContacts().add(sister);
 //        --------------------------------------------------------------
 
 //        New Contact
@@ -95,36 +96,26 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
         mom.setDetails(momDetails);
 
-        family.getContacts().add(mom);
+        contacts.add(mom);
+
+
+        return contacts;
+    }
+
+    private List<Group> groupList(){
+        List<Group> groups= new ArrayList<>();
+
+        Group family= new Group();
+        family.setName("Family");
+        family.setDescription("Only people in my family");
 
         groups.add(family);
 
-//        Group group1= new Group();
-//        group1.setName("First");
-//        group1.setDescription("First group");
-//
-//        Contact contact1= new Contact();
-//        contact1.setFirstName("Patric");
-//        contact1.setLastName("Simon");
-//        Details contactDetails= new Details();
-//        contactDetails.setNickName("Example nickname");
-//
-//        Address address= new Address();
-//        address.setCountry("Serbia");
-//        contactDetails.setAddress(address);
-//        contact1.setDetails(contactDetails);
-//
-//        Note contactNote= new Note();
-//        contactNote.setDescription("Some contact description");
-//        contact1.addNote(contactNote);
-//        group1.getContacts().add(contact1);
-//
-//        Group group2= new Group();
-//        group2.setName("Second");
-//        group2.setDescription("Second group");
-//
-//        groups.add(group1);
-//        groups.add(group2);
+        Group friends= new Group();
+        friends.setName("Friends");
+        friends.setDescription("Only my close friends");
+
+        groups.add(friends);
 
         return groups;
     }

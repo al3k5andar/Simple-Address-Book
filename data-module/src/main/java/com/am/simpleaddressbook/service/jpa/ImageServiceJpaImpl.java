@@ -44,14 +44,6 @@ public class ImageServiceJpaImpl implements ImageService
             throw new RuntimeException("Contact is NULL!!!");
         }
         Contact contact= optionalContact.get();
-        Byte[] imageArray= null;
-        if(contact.getImage()!= null) {
-            imageArray = new Byte[contact.getImage().length];
-            int counter= 0;
-            for(Byte b: contact.getImage())
-                imageArray[counter++]= b;
-            return imageArray;
-        }
-        return null;
+        return contact.getImage();
     }
 }

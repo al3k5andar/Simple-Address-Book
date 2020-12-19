@@ -82,25 +82,22 @@ class ContactDetailsControllerTest {
     @Test
     void showContactDetails() throws Exception {
 //        Given
-        Long groupId= 1L;
         Long contactId= 2L;
-        Group group= new Group();
-        group.setId(groupId);
         Contact contact= new Contact();
         contact.setId(contactId);
-        group.getContacts().add(contact);
 
 
-        Mockito.when(groupService.findById(Mockito.anyLong())).thenReturn(group);
+
+        Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.get("/groups/1/contacts/1/details/view"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/1/details/view"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("group"))
-                .andExpect(MockMvcResultMatchers.view().name("groups/details/contacts/contact-info"));
+                .andExpect(MockMvcResultMatchers.model().attributeExists("contact"))
+                .andExpect(MockMvcResultMatchers.view().name("contacts/contact-info"));
 
 //        Then
-        Mockito.verify(groupService,Mockito.times(2)).findById(Mockito.anyLong());
+        Mockito.verify(contactService,Mockito.times(2)).findById(Mockito.anyLong());
     }
 
     @Test
@@ -118,7 +115,7 @@ class ContactDetailsControllerTest {
 //        When
         MockHttpServletResponse response= mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/groups/1/contacts/1/details/image"))
+                        .get("/contacts/1/details/image"))
                             .andExpect(MockMvcResultMatchers.status().isOk())
                             .andReturn().getResponse();
 

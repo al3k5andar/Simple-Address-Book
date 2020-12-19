@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -67,11 +68,16 @@ public class ContactServiceJpaImpl implements ContactService {
     @Override
     public Contact findById(Long aLong) {
         Optional<Contact> optionalContact= contactRepository.findById(aLong);
-        if(!optionalContact.isPresent()){
+        if(optionalContact.isEmpty()){
             log.info("We can not find Contact with ID: "+ aLong);
             throw new RuntimeException("Contact with ID: "+ aLong+ " do not exists");
         }
         return optionalContact.get();
+    }
+
+    @Override
+    public List<Contact> findByLastNameLike(String lastName) {
+        return contactRepository.findByLastNameLike(lastName);
     }
 
     @Override
