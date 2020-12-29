@@ -4,6 +4,7 @@ import com.am.simpleaddressbook.domain.Contact;
 import com.am.simpleaddressbook.domain.Details;
 import com.am.simpleaddressbook.domain.Group;
 import com.am.simpleaddressbook.domain.Note;
+import com.am.simpleaddressbook.exception.ErrorNotFoundException;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.DetailsService;
 import com.am.simpleaddressbook.service.NoteService;
@@ -47,7 +48,7 @@ public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> imp
         Contact contact= super.findById(contactId);
         if(contact== null){
             log.info("We can not find Contact with ID: "+ contactId);
-            throw new RuntimeException("Contact with ID: "+ contactId + " do not exists");
+            throw new ErrorNotFoundException("Contact with ID: "+ contactId + " do not exists");
         }
         else {
             Group group= contact.getGroups()
@@ -57,7 +58,7 @@ public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> imp
             if(group!= null)
                 return contact;
             else
-                throw new RuntimeException("This Contact is not in Group");
+                throw new ErrorNotFoundException("This Contact is not in Group");
         }
     }
 

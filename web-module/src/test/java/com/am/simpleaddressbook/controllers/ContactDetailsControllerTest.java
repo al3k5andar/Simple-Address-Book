@@ -2,6 +2,7 @@ package com.am.simpleaddressbook.controllers;
 
 import com.am.simpleaddressbook.domain.Contact;
 import com.am.simpleaddressbook.domain.Group;
+import com.am.simpleaddressbook.exception.ErrorNotFoundException;
 import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.GroupService;
 import com.am.simpleaddressbook.service.ImageService;
@@ -42,7 +43,9 @@ class ContactDetailsControllerTest {
         MockitoAnnotations.openMocks(this);
         controller= new ContactDetailsController(groupService, contactService, imageService);
 
-        mockMvc= MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc= MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ExceptionHandlerController())
+                .build();
     }
 
     @Test
@@ -123,5 +126,22 @@ class ContactDetailsControllerTest {
         byte[] responseArray= response.getContentAsByteArray();
         Assertions.assertEquals(someImage.length, responseArray.length);
 
+    }
+
+    @Test
+    void showBadRequestError() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/something/details/view"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.view().name("errors/error400"));
+    }
+
+    @Test
+    void showNotFoundError() throws Exception {
+
+        Mockito.when(contactService.findById(Mockito.anyLong())).thenThrow(ErrorNotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/34443/details/view"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.view().name("errors/error404"));
     }
 }

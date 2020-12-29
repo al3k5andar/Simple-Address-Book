@@ -1,6 +1,7 @@
 package com.am.simpleaddressbook.service.jpa;
 
 import com.am.simpleaddressbook.domain.Group;
+import com.am.simpleaddressbook.exception.ErrorNotFoundException;
 import com.am.simpleaddressbook.repositories.GroupRepository;
 import com.am.simpleaddressbook.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class GroupServiceJpaImpl implements GroupService {
         log.info("Inside Transaction !!!!");
         if(group== null){
             log.info("Given Group is NULL");
-            throw new RuntimeException("Group is NULL");
+            throw new ErrorNotFoundException("Group is NULL");
         }
         return groupRepository.save(group);
     }
@@ -45,7 +46,7 @@ public class GroupServiceJpaImpl implements GroupService {
     public Group findById(Long aLong) {
         Optional<Group> optionalGroup= groupRepository.findById(aLong);
         if(!optionalGroup.isPresent())
-            throw new RuntimeException("Group ID can not be null!!!");
+            throw new ErrorNotFoundException("Group ID can not be null!!!");
         return  optionalGroup.get();
     }
 

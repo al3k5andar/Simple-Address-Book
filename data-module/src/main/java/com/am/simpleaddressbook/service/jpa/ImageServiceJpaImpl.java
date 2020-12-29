@@ -1,6 +1,7 @@
 package com.am.simpleaddressbook.service.jpa;
 
 import com.am.simpleaddressbook.domain.Contact;
+import com.am.simpleaddressbook.exception.ErrorNotFoundException;
 import com.am.simpleaddressbook.repositories.ContactRepository;
 import com.am.simpleaddressbook.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class ImageServiceJpaImpl implements ImageService
     public void setImage(byte[] image, Contact contact) {
         if (contact== null){
             log.info("Contact dont exists or is null!!!!");
-            throw new RuntimeException("Contact is NULL!!!");
+            throw new ErrorNotFoundException("Contact is NULL!!!");
         }
 
         Byte[] imageBytes= new Byte[image.length];
@@ -41,7 +42,7 @@ public class ImageServiceJpaImpl implements ImageService
         Optional<Contact> optionalContact= contactRepository.findById(contactId);
         if(!optionalContact.isPresent()){
             log.info("Contact with ID:  "+ contactId +"dont exists or is null!!!!");
-            throw new RuntimeException("Contact is NULL!!!");
+            throw new ErrorNotFoundException("Contact is NULL!!!");
         }
         Contact contact= optionalContact.get();
         return contact.getImage();

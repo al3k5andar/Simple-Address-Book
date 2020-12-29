@@ -2,6 +2,7 @@ package com.am.simpleaddressbook.service.jpa;
 
 import com.am.simpleaddressbook.domain.Contact;
 import com.am.simpleaddressbook.domain.Group;
+import com.am.simpleaddressbook.exception.ErrorNotFoundException;
 import com.am.simpleaddressbook.repositories.ContactRepository;
 import com.am.simpleaddressbook.repositories.GroupRepository;
 import com.am.simpleaddressbook.service.ContactService;
@@ -70,7 +71,7 @@ public class ContactServiceJpaImpl implements ContactService {
         Optional<Contact> optionalContact= contactRepository.findById(aLong);
         if(optionalContact.isEmpty()){
             log.info("We can not find Contact with ID: "+ aLong);
-            throw new RuntimeException("Contact with ID: "+ aLong+ " do not exists");
+            throw new ErrorNotFoundException("Contact with ID: "+ aLong+ " do not exists");
         }
         return optionalContact.get();
     }
