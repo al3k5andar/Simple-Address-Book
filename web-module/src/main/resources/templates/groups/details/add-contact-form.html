@@ -45,7 +45,7 @@
                                                 <div class="col-md-6">
                                                     <label for="contactSelection" class="col-form-label">Choose contact</label>
                                                     <select id="contactSelection" class="custom-select" name="contactSelection">
-                                                        <option th:each="contact: ${contacts}"
+                                                        <option th:each="contact: ${contacts}" 
                                                                 th:text="${contact.firstName +' '+ contact.lastName+
                                                                  '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ contact.details.phone}"
                                                                 th:value="${contact.id}"></option>

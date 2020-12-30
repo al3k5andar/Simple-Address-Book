@@ -5,10 +5,13 @@ import com.am.simpleaddressbook.service.ContactService;
 import com.am.simpleaddressbook.service.ImageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,13 +41,7 @@ public class ContactController {
 
     @GetMapping("/new")
     public ModelAndView showNewContactForm(){
-        Contact contact= new Contact();
-        Details details= new Details();
-        Address address= new Address();
-        details.setAddress(address);
-        contact.setDetails(details);
-        Note note= new Note();
-        contact.setNote(note);
+        Contact contact = getContact();
 
         ModelAndView modelAndView= new ModelAndView();
         modelAndView.addObject("contact", contact);
@@ -55,13 +52,28 @@ public class ContactController {
     }
 
     @PostMapping("/new")
-    public String processNewContactForm(@ModelAttribute Contact contact,
-                                        @RequestParam("contactImage") MultipartFile multipartFile) throws IOException {
+    public String processNewContactForm(@Valid @ModelAttribute Contact contact, BindingResult result,
+                                        @RequestParam("contactImage") MultipartFile multipartFile,
+                                        Model model) throws IOException {
+
+        if(result.hasErrors())
+            return "contacts/contact-form";
 
         imageService.setImage(multipartFile.getBytes(),contact);
         Contact savedContact= contactService.save(contact);
 
         return "redirect:/contacts/"+ savedContact.getId() +"/details/view";
+    }
+
+    private Contact getContact() {
+        Contact contact= new Contact();
+        Details details= new Details();
+        Address address= new Address();
+        details.setAddress(address);
+        contact.setDetails(details);
+        Note note= new Note();
+        contact.setNote(note);
+        return contact;
     }
 
     @GetMapping("/{contactId}/update")
@@ -72,25 +84,31 @@ public class ContactController {
     }
 
     @PostMapping("/{contactId}/update")
-    public String processUpdateContactForm(@PathVariable Long contactId,
-                                           @ModelAttribute Contact contact,
+    public String processUpdateContactForm(@PathVariable Long contactId, @Valid @ModelAttribute Contact contact,
+                                           BindingResult result,
                                            @RequestParam("contactImage") MultipartFile multipartFile) throws IOException {
 
         Contact searchedContact= contactService.findById(contactId);
-        if(searchedContact!= null) {
-            searchedContact.setContactType(contact.getContactType());
-            searchedContact.setMiddleName(contact.getMiddleName());
-            searchedContact.setFirstName(contact.getFirstName());
-            searchedContact.setLastName(contact.getLastName());
-            searchedContact.setDetails(contact.getDetails());
-            searchedContact.setNote(contact.getNote());
-            if(multipartFile.getBytes().length != 0){
-                imageService.setImage(multipartFile.getBytes(),searchedContact);
-            }
-        }
-        contactService.save(searchedContact);
 
-        return "redirect:/contacts/"+ contactId + "/details/view";
+        if(result.hasErrors()) {
+            return "contacts/contact-form";
+        }
+        else{
+            if(searchedContact!= null) {
+                searchedContact.setContactType(contact.getContactType());
+                searchedContact.setMiddleName(contact.getMiddleName());
+                searchedContact.setFirstName(contact.getFirstName());
+                searchedContact.setLastName(contact.getLastName());
+                searchedContact.setDetails(contact.getDetails());
+                searchedContact.setNote(contact.getNote());
+                if(multipartFile.getBytes().length != 0){
+                    imageService.setImage(multipartFile.getBytes(),searchedContact);
+                }
+            }
+            contactService.save(searchedContact);
+
+            return "redirect:/contacts/"+ contactId + "/details/view";
+        }
     }
 
     @GetMapping("/{contactId}/delete")

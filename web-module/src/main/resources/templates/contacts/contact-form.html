@@ -37,6 +37,10 @@
                     </div>
                     <div class="card-body">
                         <form th:object="${contact}" method="post" enctype="multipart/form-data">
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                                <p>Form is not valid please correct errors</p>
+                            </div>
+
                             <input type="hidden" th:field="*{id}">
                             <div class="card border-0">
                                 <div class="card-header">
@@ -55,15 +59,31 @@
                                         <div class="col-md-4">
                                             <div class="container">
                                                 <div class="form-group">
-                                                    <label for="firstName" class="paramLabel">First Name:</label>
-                                                    <input id="firstName" type="text" class="form-control" th:field="*{firstName}">
+                                                    <label for="firstName" class="col-form-label">First Name:</label>
+                                                    <input id="firstName" type="text" class="form-control"
+                                                           th:field="*{firstName}"
+                                                           th:errorclass="is-invalid">
+                                                    <span class="form-text" th:if="${#fields.hasErrors('firstName')}">
+                                                        <ul>
+                                                            <li class="text-danger" th:each="err: ${#fields.errors('firstName')}"
+                                                                th:text="${err}">error</li>
+                                                        </ul>
+                                                    </span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="lastName" class="paramLabel">Last Name:</label>
-                                                    <input id="lastName" type="text" class="form-control" th:field="*{lastName}">
+                                                    <label for="lastName" class="col-form-label">Last Name:</label>
+                                                    <input id="lastName" type="text" class="form-control"
+                                                           th:field="*{lastName}"
+                                                           th:errorclass="is-invalid">
+                                                    <span class="form-text" th:if="${#fields.hasErrors('lastName')}">
+                                                        <ul>
+                                                            <li class="text-danger" th:each="err: ${#fields.errors('lastName')}"
+                                                                th:text="${err}">text</li>
+                                                        </ul>
+                                                    </span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="middleName" class="paramLabel">Middle Name:</label>
+                                                    <label for="middleName" class="col-form-label">Middle Name:</label>
                                                     <input id="middleName" type="text" class="form-control" th:field="*{middleName}">
                                                 </div>
                                             </div>
@@ -71,7 +91,7 @@
                                         <div class="col-md-4">
                                             <div class="container">
                                                 <div class="form-group">
-                                                    <label for="contactType" class="paramLabel">Contact Type:</label>
+                                                    <label for="contactType" class="col-form-label">Contact Type:</label>
                                                     <select class="form-control" id="contactType" th:field="${contact.contactType}">
                                                         <option th:each="type: ${contactType}"
                                                                 th:text="${type}"
@@ -92,31 +112,43 @@
                                             <div class="col-md-4 offset-md-2">
                                                 <div class="container">
                                                     <div class="form-group">
-                                                        <label for="phone" class="paramLabel">Phone:</label>
+                                                        <label for="phone" class="col-form-label">Phone:</label>
                                                         <input type="text" class="form-control" id="phone"
-                                                               th:field="${contact.details.phone}">
+                                                               th:field="${contact.details.phone}" th:errorclass="is-invalid">
+                                                        <span class="form-text" th:if="${#fields.hasErrors('details.phone')}">
+                                                            <ul>
+                                                                <li class="text-danger" th:each="err: ${#fields.errors('details.phone')}"
+                                                                    th:text="${err}">error</li>
+                                                            </ul>
+                                                        </span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="workPhone" class="paramLabel">Work Phone:</label>
+                                                        <label for="workPhone" class="col-form-label">Work Phone:</label>
                                                         <input type="text" class="form-control" id="workPhone"
                                                                th:field="${contact.details.workPhone}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="email" class="paramLabel">Email:</label>
+                                                        <label for="email" class="col-form-label">Email:</label>
                                                         <input type="text" class="form-control" id="email"
-                                                               th:field="${contact.details.email}">
+                                                               th:field="${contact.details.email}" th:errorclass="is-invalid">
+                                                        <span class="form-text" th:if="${#fields.hasErrors('details.email')}">
+                                                            <ul>
+                                                                <li class="text-danger" th:each="err: ${#fields.errors('details.email')}"
+                                                                    th:text="${err}">error</li>
+                                                            </ul>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="container">
                                                     <div class="form-group">
-                                                        <label for="birthday" class="paramLabel">Date of Birth:</label>
+                                                        <label for="birthday" class="col-form-label">Date of Birth:</label>
                                                         <input type="date" class="form-control" id="birthday" placeholder="yyyy/MM/dd"
                                                                th:field="${contact.details.birthday}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="nickname" class="paramLabel">Nickname:</label>
+                                                        <label for="nickname" class="col-form-label">Nickname:</label>
                                                         <input type="text" class="form-control" id="nickname"
                                                                th:field="${contact.details.nickName}">
                                                     </div>
@@ -135,12 +167,12 @@
                                             <div class="col-md-4 offset-md-2">
                                                 <div class="container">
                                                     <div class="form-group">
-                                                        <label for="country" class="paramLabel">Country:</label>
+                                                        <label for="country" class="col-form-label">Country:</label>
                                                         <input type="text" id="country" class="form-control"
                                                                th:field="${contact.details.address.country}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="city" class="paramLabel">City:</label>
+                                                        <label for="city" class="col-form-label">City:</label>
                                                         <input type="text" id="city" class="form-control"
                                                                th:field="${contact.details.address.city}">
                                                     </div>
@@ -149,12 +181,12 @@
                                             <div class="col-md-4">
                                                 <div class="container">
                                                     <div class="form-group">
-                                                        <label for="street" class="paramLabel">Street:</label>
+                                                        <label for="street" class="col-form-label">Street:</label>
                                                         <input type="text" id="street" class="form-control"
                                                                th:field="${contact.details.address.street}">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="houseNo" class="paramLabel">House Number:</label>
+                                                        <label for="houseNo" class="col-form-label">House Number:</label>
                                                         <input type="text" id="houseNo" class="form-control"
                                                                th:field="${contact.details.address.houseNo}">
                                                     </div>
@@ -170,7 +202,7 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label for="note" class="paramLabel">Description:</label>
+                                                <label for="note" class="col-form-label">Description:</label>
                                                 <textarea id="note" class="form-control" rows="3"
                                                           th:field="${contact.note.description}"></textarea>
                                             </div>
