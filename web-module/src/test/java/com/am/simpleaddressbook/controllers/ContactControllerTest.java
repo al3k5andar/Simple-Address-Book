@@ -130,8 +130,10 @@ class ContactControllerTest {
 //        When
         mockMvc.perform(MockMvcRequestBuilders.multipart("/contacts/new").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .param("groupId","1L")
-                    .param("contact","description"))
+                    .param("contactId","2L")
+                    .param("firstName","Mike")
+                    .param("lastName","Jonson")
+                    .param("details.phone","33445575"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/1/details/view"));
 //        Then
@@ -161,6 +163,8 @@ class ContactControllerTest {
 //        Given
         Contact contact= new Contact();
         contact.setId(2L);
+        Details details= new Details();
+        contact.setDetails(details);
 
         Mockito.when(contactService.findById(Mockito.anyLong())).thenReturn(contact);
 
@@ -174,8 +178,9 @@ class ContactControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.multipart("/contacts/2/update").file(file)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("contactId","2L")
-                    .param("groupId","1L")
-                    .param("contact","description"))
+                    .param("firstName","Mike")
+                    .param("lastName","Jonson")
+                    .param("details.phone","33445575"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/contacts/2/details/view"));
 //        Then

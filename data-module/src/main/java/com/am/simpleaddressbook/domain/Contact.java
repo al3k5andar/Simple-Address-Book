@@ -43,7 +43,6 @@ public class Contact extends BaseEntry
     @JoinColumn(name = "details_id")
     private Details details;
 
-    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "note_id")
     private Note note;

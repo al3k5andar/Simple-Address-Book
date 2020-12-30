@@ -93,22 +93,21 @@ public class ContactController {
         if(result.hasErrors()) {
             return "contacts/contact-form";
         }
-        else{
-            if(searchedContact!= null) {
-                searchedContact.setContactType(contact.getContactType());
-                searchedContact.setMiddleName(contact.getMiddleName());
-                searchedContact.setFirstName(contact.getFirstName());
-                searchedContact.setLastName(contact.getLastName());
-                searchedContact.setDetails(contact.getDetails());
-                searchedContact.setNote(contact.getNote());
-                if(multipartFile.getBytes().length != 0){
-                    imageService.setImage(multipartFile.getBytes(),searchedContact);
-                }
-            }
-            contactService.save(searchedContact);
 
-            return "redirect:/contacts/"+ contactId + "/details/view";
+        if(searchedContact!= null) {
+            searchedContact.setContactType(contact.getContactType());
+            searchedContact.setMiddleName(contact.getMiddleName());
+            searchedContact.setFirstName(contact.getFirstName());
+            searchedContact.setLastName(contact.getLastName());
+            searchedContact.setDetails(contact.getDetails());
+            searchedContact.setNote(contact.getNote());
+            if(multipartFile.getBytes().length != 0){
+                imageService.setImage(multipartFile.getBytes(),searchedContact);
+            }
         }
+        contactService.save(searchedContact);
+
+        return "redirect:/contacts/"+ contactId + "/details/view";
     }
 
     @GetMapping("/{contactId}/delete")
