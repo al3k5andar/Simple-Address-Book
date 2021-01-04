@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@Profile("JPA")
+@Profile({"H2","dev"})
 @Slf4j
 public class ImageServiceJpaImpl implements ImageService
 {

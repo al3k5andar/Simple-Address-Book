@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Profile("JPA")
+@Profile({"H2","dev"})
 @Service
 @Slf4j
 public class GroupServiceJpaImpl implements GroupService {
