@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -63,8 +65,23 @@ public class ContactServiceMapImpl extends AbstractContactMap<Long, Contact> imp
     }
 
     @Override
-    public List<Contact> findByLastNameLike(String lastName) {
-        return null;
+    public List<Contact> findByLastNameLikeIgnoreCase(String lastName) {
+        List<Contact> contacts= new ArrayList<>();
+
+        super.findAll().stream()
+                .filter(contact -> contact.getLastName().equalsIgnoreCase(lastName))
+                .map(contacts::add);
+        return contacts;
+    }
+
+    @Override
+    public List<Contact> findByFirstNameLikeIgnoreCase(String firstName) {
+        List<Contact> contacts= new ArrayList<>();
+
+        super.findAll().stream()
+                .filter(contact -> contact.getFirstName().equalsIgnoreCase(firstName))
+                .map(contacts::add);
+        return contacts;
     }
 
     @Override

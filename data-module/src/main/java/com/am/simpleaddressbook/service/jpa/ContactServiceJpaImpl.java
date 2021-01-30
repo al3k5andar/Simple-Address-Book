@@ -77,8 +77,13 @@ public class ContactServiceJpaImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> findByLastNameLike(String lastName) {
-        return contactRepository.findByLastNameLike(lastName);
+    public List<Contact> findByLastNameLikeIgnoreCase(String lastName) {
+        return contactRepository.findByLastNameLikeIgnoreCase(lastName);
+    }
+
+    @Override
+    public List<Contact> findByFirstNameLikeIgnoreCase(String firstName) {
+        return contactRepository.findByFirstNameLikeIgnoreCase(firstName);
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/contacts")
@@ -130,14 +130,21 @@ public class ContactController {
                                     Model model){
         if(searchWord.isBlank())
             return "redirect:/contacts/search";
-        List<Contact> contactList= contactService.findByLastNameLike("%"+searchWord+"%");
-        if(contactList.size()== 1){
-            Contact contact= contactList.get(0);
+
+        List<Contact> byLastNameList= contactService.findByLastNameLikeIgnoreCase("%"+searchWord+"%");
+        List<Contact> byFirstNameList= contactService.findByFirstNameLikeIgnoreCase("%"+searchWord+"%");
+
+        Collection<Contact> masterCollection= new HashSet<>();
+        masterCollection.addAll(byLastNameList);
+        masterCollection.addAll(byFirstNameList);
+
+        if(masterCollection.size()== 1){
+            Contact contact= masterCollection.stream().findFirst().get();
             model.addAttribute("contact", contact);
             return "redirect:/contacts/"+ contact.getId()+ "/details/view";
         }
         else {
-            model.addAttribute("contacts", contactList);
+            model.addAttribute("contacts", masterCollection);
             return "contacts/find-contact-form";
         }
     }

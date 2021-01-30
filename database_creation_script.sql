@@ -10,3 +10,4 @@ alter table contact add constraint FKowidydwdlqnuruqts0quwgbdi foreign key (note
 alter table details add constraint FKkmxk0dpw7981py2lteah2jkhs foreign key (address_id) references address (id);
 alter table group_contact add constraint FK6e1ndgukul60i5ubvq510oajv foreign key (contact_id) references contact (id);
 alter table group_contact add constraint FKqqv7xosibfi7ggllna1sh9w95 foreign key (group_id) references group_of_contacts (id);
+

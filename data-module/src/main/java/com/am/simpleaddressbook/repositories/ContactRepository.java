@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ContactRepository extends CrudRepository<Contact, Long>
 {
-    List<Contact> findByLastNameLike(String lastName);
+    List<Contact> findByLastNameLikeIgnoreCase(String lastName);
+
+    List<Contact> findByFirstNameLikeIgnoreCase(String firstName);
 
 }

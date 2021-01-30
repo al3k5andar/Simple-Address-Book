@@ -8,5 +8,7 @@ public interface ContactService extends BaseService<Long, Contact> {
 
     Contact findByGroupIdAndContactId(Long groupId, Long contactId);
 
-    List<Contact> findByLastNameLike(String lastName);
+    List<Contact> findByLastNameLikeIgnoreCase(String lastName);
+
+    List<Contact> findByFirstNameLikeIgnoreCase(String firstName);
 }

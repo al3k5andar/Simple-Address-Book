@@ -1,0 +1,22 @@
+hr{
+    position: relative;
+    right: 40%;
+    border: 1px solid #C7B16E;
+    width: 20%;
+}
+.text_context{
+    position: relative;
+    margin-top: 10%;
+}
+p{
+    text-align: center;
+}
+
+#readMoreButton{
+    margin-top: 10%;
+    display: flex;
+    justify-content: center;
+}
+.custom-a{
+    margin-right: 5%;
+}
