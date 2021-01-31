@@ -34,7 +34,11 @@ public class ContactController {
 
     @GetMapping({"","/","index"})
     public String showAllContacts(Model model){
-        model.addAttribute("contacts", contactService.findAll());
+        List<Contact> contactList= new ArrayList<>(contactService.findAll());
+
+//        Sort list by first name
+        contactList.sort(Comparator.comparing(Contact::getFirstName));
+        model.addAttribute("contacts", contactList);
 
         return "contacts/index";
     }
@@ -121,7 +125,11 @@ public class ContactController {
 
     @GetMapping("/search")
     public String ShowSearchForm(Model model){
-        model.addAttribute("contacts", contactService.findAll());
+        List<Contact> contactList= new ArrayList<>(contactService.findAll());
+
+//        Sort list by first name
+        contactList.sort(Comparator.comparing(Contact::getFirstName));
+        model.addAttribute("contacts", contactList);
         return "contacts/find-contact-form";
     }
 

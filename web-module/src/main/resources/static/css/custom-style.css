@@ -12,10 +12,10 @@ p{
     text-align: center;
 }
 
-#readMoreButton{
+.buttons{
     margin-top: 10%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 }
 .custom-a{
     margin-right: 5%;
