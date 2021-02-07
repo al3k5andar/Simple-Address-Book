@@ -16,7 +16,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 class ContactControllerTest {
@@ -64,14 +66,14 @@ class ContactControllerTest {
 //        Given
         Contact contact1= new Contact();
         Contact contact2= new Contact();
-        Set<Contact> contacts= new HashSet<>();
-        contacts.add(contact1);
-        contacts.add(contact2);
+        Set<Contact> contactSet= new HashSet<>();
+        contactSet.add(contact1);
+        contactSet.add(contact2);
 
-        Mockito.when(contactService.findAll()).thenReturn(contacts);
+        Mockito.when(contactService.findAll()).thenReturn(contactSet);
 
 //        When
-        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/index"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/contacts/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("contacts"))
                 .andExpect(MockMvcResultMatchers.view().name("contacts/index"));

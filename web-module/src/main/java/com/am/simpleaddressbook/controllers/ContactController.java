@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/contacts")
@@ -34,11 +36,8 @@ public class ContactController {
 
     @GetMapping({"","/","index"})
     public String showAllContacts(Model model){
-        List<Contact> contactList= new ArrayList<>(contactService.findAll());
 
-//        Sort list by first name
-        contactList.sort(Comparator.comparing(Contact::getFirstName));
-        model.addAttribute("contacts", contactList);
+        model.addAttribute("contacts", contactService.findAll());
 
         return "contacts/index";
     }
